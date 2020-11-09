@@ -1,6 +1,6 @@
 /* Global Variables */
-let baseURL ='api.openweathermap.org/data/2.5/weather?zip=<ZIP>&appid=ec65a9e2af33a7b83dbdac54c0d6a948&units=i';
-const key = 'ec65a9e2af33a7b83dbdac54c0d6a948'
+const baseURL = `http://api.openweathermap.org/data/2.5/weather?zip=`;
+const key = '&appid=ec65a9e2af33a7b83dbdac54c0d6a948&units=imperial';
 // Create a new date instance dynamically with JS
 let d = new Date();
 let newDate = d.getMonth()+'.'+ d.getDate()+'.'+ d.getFullYear();
@@ -18,7 +18,7 @@ function performAction(e) {
   getWeather(baseURL, theZip, key)
     .then(function (data) {
       //Post request
-      postData('/add', {temperature: data.temp, date: newDate, user_response: theFeelings})
+      postData('/add', {temperature: data.main.temp, date: newDate, user_response: theFeelings})
     }).then(function() {
       //update the browser
       updateUI()
