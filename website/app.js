@@ -1,5 +1,5 @@
 /* Global Variables */
-let baseURL ='https://api.openweathermap.org/data/2.5/weather?zip=';
+let baseURL ='api.openweathermap.org/data/2.5/weather?zip=';
 let key = 'ec65a9e2af33a7b83dbdac54c0d6a948'
 // Create a new date instance dynamically with JS
 let d = new Date();
@@ -13,13 +13,13 @@ function performAction(e) {
   e.preventDefault();
   // get the input values of the user
   const theZip = document.getElementById('zip').value;
-  const content = document.getElementById('feelings').value;
-
+  const theFeelings = document.getElementById('feelings').value;
+  console.log(newDate);
   getWeather(baseURL, theZip, key)
-    .then(function (userData) {
+    .then(function (data) {
       //Post request
-      postData('/add', {date: newDate, temp: userData.main.temp, content})
-    }).then(function (newData) {
+      postData('/add', {temperature: data.temp, date: newDate, user_response: theFeelings})
+    }).then(function() {
       //update the browser
       updateUI()
     })
@@ -28,37 +28,36 @@ function performAction(e) {
 
 /* GET Web API Data function*/
 const getWeather = async (baseURL, theZip, key) => {
-   const res = await fetch(baseURL + theZip + key);
+   const response = await fetch(baseURL + theZip + key);
+   console.log(response);
    try {
-     const userData = await res.json();
+     const userData = await response.json();
+     console.log(userData);
      return userData;
-  }catch (error) {
+    }
+  catch(error) {
     console.log("error", error);
   }
 }
 
 /*post the data */
 const postData = async (url = '', data = {}) => {
-  const req = await fetch(url, {
+  const requested = await fetch(url, {
     method: "POST",
     credentials: "same-origin",
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify({
-      date: data.date,
-      temp: data.temp,
-      content: data.content
-    })
+    body: JSON.stringify(data),
   })
 
   try {
-    const newData = await req.json();
+    const newData = await requested.json();
     console.log(newData);
     return newData;
   }
   catch (error) {
-    console.log(error);
+    console.log('error', error);
   }
 };
 
@@ -70,8 +69,8 @@ const updateUI = async () => {
 
     // update new entry values
     document.getElementById('date').innerHTML = theData.date;
-    document.getElementById('temp').innerHTML = theData.temp;
-    document.getElementById('content').innerHTML = theData.content;
+    document.getElementById('temp').innerHTML = theData.temperature;
+    document.getElementById('content').innerHTML = theData.user_response;
   }
   catch (error) {
     console.log("error", error);

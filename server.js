@@ -37,14 +37,14 @@ function sendingData (request, response)
 {
     response.send(projectData);
 }
-
-app.post('/weatherData', addingData);
+// POST route
+app.post('/add', addingData);
 function addingData (request, response)
-{
+{   
+    console.log(request.body);
     projectData.date = request.body.date;
-    projectData.temp = request.body.temp;
-    projectData.theResponse = request.body.theResponse;
+    projectData.temperature = request.body.temperature;
+    projectData.user_response = request.body.user_response;
 
-    response.end();
     console.log(projectData);
 }
